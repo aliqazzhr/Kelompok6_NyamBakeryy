@@ -1,0 +1,1590 @@
+<!DOCTYPE html>
+<html lang="id" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NyamBakeryy Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- MODERN GLOW & CLEAN RENDER DESIGN --- */
+        :root {
+            --nyam-deep: #150030;
+            --nyam-indigo: #51188a;
+            --nyam-cornflower: #7b99f7;
+            --card-bg: #ffffff;
+            --border-clr: #edf0f5;
+            --topbar-bg: #ffffff;
+            --body-bg: #f6f8fc;
+            --body-clr: #2d2a35;
+            --radius-lg: 16px;
+            --radius-sm: 10px;
+        }
+        [data-bs-theme="dark"] {
+            --card-bg: #1a1a26;
+            --border-clr: #26263b;
+            --topbar-bg: #1a1a26;
+            --body-bg: #11111b;
+            --body-clr: #e2e4ed;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--body-bg);
+            color: var(--body-clr);
+            letter-spacing: -0.01em;
+            overflow-x: hidden;
+        }
+        
+        /* Navbar Upgrade */
+        .nyam-navbar {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-clr);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.01);
+        }
+        [data-bs-theme="dark"] .nyam-navbar {
+            background-color: rgba(26, 26, 38, 0.85);
+        }
+
+        /* Card & Container Layout Fixes */
+        .nyam-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-clr);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 30px rgba(75, 0, 130, 0.015), 0 1px 3px rgba(0,0,0,0.01);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        /* Katalog & Grid Simetris */
+        .product-card {
+            border-radius: var(--radius-lg) !important;
+            overflow: hidden;
+            border: 1px solid var(--border-clr) !important;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 30px rgba(81, 24, 138, 0.08) !important;
+            border-color: rgba(123, 153, 247, 0.4) !important;
+        }
+
+        /* Teks Truncate Otomatis untuk Nama Menu Panjang */
+        .text-truncate-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
+        }
+        .object-fit-cover {
+            object-fit: cover !important;
+        }
+
+        /* Tombol Premium */
+        .nyam-btn {
+            background: linear-gradient(135deg, var(--nyam-indigo), #6482f5);
+            border: none;
+            color: white;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(81, 24, 138, 0.12);
+        }
+        .nyam-btn:hover { 
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(81, 24, 138, 0.22);
+            color: white; 
+            opacity: 0.95;
+        }
+
+        .active-cat-btn {
+            font-weight: 500 !important;
+            font-size: 13px !important;
+            padding: 8px 16px !important;
+            border: 1px solid #e1e5ee !important;
+            transition: all 0.2s ease !important;
+        }
+        .btn-primary.active-cat-btn {
+            background-color: var(--nyam-indigo) !important;
+            border-color: var(--nyam-indigo) !important;
+        }
+
+        /* Form Controls */
+        .form-control, .form-select {
+            border-radius: var(--radius-sm);
+            border: 1px solid #e2e7f1;
+            padding: 0.55rem 0.75rem;
+            font-size: 13px;
+            background-color: #fafbfc;
+        }
+        [data-bs-theme="dark"] .form-control, [data-bs-theme="dark"] .form-select {
+            background-color: #202030;
+            border-color: #2b2b40;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #7b99f7;
+            box-shadow: 0 0 0 3px rgba(123, 153, 247, 0.15);
+            background-color: #ffffff;
+        }
+        
+        /* Hilangkan panah up/down di input type number */
+        input[type="number"]::-webkit-inner-spin-button, 
+        input[type="number"]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+        }
+        [data-bs-theme="dark"] ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .toast-container-custom { position: fixed; top: 25px; right: 25px; z-index: 1080; }
+        .fade-in { animation: fadeIn 0.35s ease-out; }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(8px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        
+        .table thead th {
+            font-weight: 700;
+            color: #7c859a;
+            font-size: 11px;
+            letter-spacing: 0.05em;
+            border-bottom: 2px solid var(--border-clr);
+            padding: 12px 16px;
+        }
+        .table tbody td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-clr);
+        }
+
+        @media print {
+            body * { visibility: hidden; }
+            #notaPrintArea, #notaPrintArea * { visibility: visible; }
+            #notaPrintArea { position: absolute; left: 0; top: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toast-container-custom" id="toastContainer"></div>
+
+    <nav class="navbar navbar-expand-lg nyam-navbar sticky-top py-2">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#" onclick="switchTab('t-dashboard')">
+                <i class="fa-solid fa-cake-candles me-2 fs-4 text-primary"></i>
+                <span class="fw-bold text-body">Nyam</span><span class="text-primary fw-bold">Bakeryy</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 fw-medium gap-1 mt-2 mt-lg-0">
+                    <li class="nav-item"><a class="nav-link active" id="nav-t-dashboard" href="#" onclick="switchTab('t-dashboard')"><i class="fa-solid fa-house me-1"></i>Katalog Menu</a></li>
+                    <li class="nav-item admin-only" style="display:none;"><a class="nav-link" id="nav-t-manajemen" href="#" onclick="switchTab('t-manajemen')"><i class="fa-solid fa-cookie-bite me-1"></i>Data Produk</a></li>
+                    <li class="nav-item admin-only" style="display:none;"><a class="nav-link" id="nav-t-pos" href="#" onclick="switchTab('t-pos')"><i class="fa-solid fa-cash-register me-1"></i>Kasir POS</a></li>
+                    <li class="nav-item admin-only" style="display:none;"><a class="nav-link" id="nav-t-laporan" href="#" onclick="switchTab('t-laporan')"><i class="fa-solid fa-chart-line me-1"></i>Laporan Penjualan</a></li>
+                    <li class="nav-item admin-only" style="display:none;"><a class="nav-link" id="nav-t-pengguna" href="#" onclick="switchTab('t-pengguna')"><i class="fa-solid fa-users me-1"></i>Kelola Akun</a></li>
+                    <li class="nav-item admin-only" style="display:none;">
+                        <a class="nav-link" id="nav-t-cabang" href="#" onclick="switchTab('t-cabang')">
+                            <i class="fa-solid fa-code-branch me-1"></i>Kelola Cabang
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center gap-3">
+                    <button class="btn btn-link text-body p-1 border-0" onclick="toggleTheme()"><i id="theme-icon" class="fa-solid fa-moon fs-5"></i></button>
+                    <div class="d-flex align-items-center gap-2 border-start ps-3">
+                        <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold" id="dAv" style="width: 34px; height: 34px;">P</div>
+                        <div>
+                            <div class="small fw-bold lh-1" id="dNm">Pengunjung</div>
+                            <span class="badge bg-secondary" style="font-size: 9px;" id="dRl">viewer</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm nyam-btn rounded-pill px-3 shadow-sm" id="btnP" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <i class="fa-solid fa-right-to-bracket me-1"></i> Login Internal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-4">
+        
+        <div id="t-dashboard" class="tab-content fade-in">
+            <div class="nyam-card p-4 mb-4 text-center">
+                <h4 class="fw-bold mb-3">Mau Cari Menu Sajian Apa Hari Ini?</h4>
+                <div class="d-flex justify-content-center mb-4">
+                    <div class="input-group input-group-sm" style="max-width: 500px;">
+                        <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" id="searchKatalog" class="form-control border-start-0" placeholder="Ketik nama varian kue atau roti..." oninput="renderKatalog()">
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center flex-wrap gap-2">
+                    <button class="btn btn-sm btn-primary rounded-pill px-3 active-cat-btn" id="cat-all" onclick="filterKategori('')">Semua Varian</button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 active-cat-btn" id="cat-roti" onclick="filterKategori('Roti')">🍞 Aneka Roti</button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 active-cat-btn" id="cat-kering" onclick="filterKategori('Kue Kering')">🍪 Kue Kering</button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 active-cat-btn" id="cat-basah" onclick="filterKategori('Kue Basah')">🍰 Kue Basah</button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 active-cat-btn" id="cat-coffee" onclick="filterKategori('Coffee Break')">☕ Coffee Break</button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 active-cat-btn" id="cat-snack" onclick="filterKategori('Snack')">🍿 Snack</button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 active-cat-btn" id="cat-aksesoris" onclick="filterKategori('Aksesoris')">🎀 Aksesoris</button>
+                </div>
+            </div>
+
+            <div id="katalog-sections-wrapper"></div>
+
+            <div class="row g-4 mt-2">
+                <div class="col-lg-4 col-md-6">
+                    <div class="nyam-card p-4 h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-comments text-warning me-2"></i>Ulasan Pengunjung</h5>
+                            <div class="mb-3 p-3 bg-light-subtle border rounded-3 small">
+                                <div class="row g-2 mb-2">
+                                    <div class="col-7">
+                                        <input type="text" id="formReviewName" class="form-control form-control-sm" placeholder="Nama Anda">
+                                    </div>
+                                    <div class="col-5">
+                                        <select id="formReviewRating" class="form-select form-select-sm">
+                                            <option value="5">⭐⭐⭐⭐⭐</option>
+                                            <option value="4">⭐⭐⭐⭐</option>
+                                            <option value="3">⭐⭐⭐</option>
+                                            <option value="2">⭐⭐</option>
+                                            <option value="1">⭐</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <textarea id="formReviewText" class="form-control form-control-sm" rows="2" placeholder="Tulis masukan toko kami..."></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted fw-semibold mb-1" style="font-size: 10px;"><i class="fa-solid fa-image me-1"></i>Foto Lampiran (Opsional)</label>
+                                    <input type="file" id="formReviewImage" class="form-control form-control-sm" accept="image/*">
+                                </div>
+                                <button class="btn btn-sm nyam-btn w-100 rounded-pill py-1.5" onclick="kirimUlasan()">Kirim Ulasan</button>
+                            </div>
+                        </div>
+                        <div class="vstack gap-2" id="ulasan-wrapper" style="max-height: 230px; overflow-y: auto; padding-right: 2px;"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="nyam-card p-4 h-100 d-flex flex-column justify-content-between bg-light-subtle">
+                        <div>
+                            <h5 class="fw-bold mb-3"><i class="fa-solid fa-basket-shopping text-danger me-2"></i>Keranjang Belanja</h5>
+                            <hr class="mt-0 text-muted opacity-25">
+                            <div id="visitor-cart-wrapper" class="vstack gap-2" style="max-height: 310px; overflow-y: auto; padding-right: 2px;">
+                                <p class="text-muted small text-center my-4">Keranjang kosong. Tambahkan menu di atas!</p>
+                            </div>
+                        </div>
+                        <div>
+                            <hr class="text-muted opacity-25 mt-3">
+                            <div class="d-flex justify-content-between align-items-center fw-bold mb-3 small px-1">
+                                <span>Total Estimasi Order:</span>
+                                <span class="text-primary fs-6" id="visitor-cart-total">Rp 0</span>
+                            </div>
+                            <button class="btn btn-sm btn-success w-100 rounded-pill fw-bold py-2 shadow-sm" onclick="checkoutVisitorWA()">
+                                <i class="fa-brands fa-whatsapp me-2"></i>Kirim Rekap Order ke WA
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+               <div class="col-lg-4 col-12">
+    <div class="nyam-card p-4 h-100 d-flex flex-column justify-content-between bg-body-tertiary">
+        <div>
+            <h5 class="fw-bold mb-3"><i class="fa-solid fa-store text-primary me-2"></i>Informasi Cabang</h5>
+            <div class="mb-3 p-2.5 bg-white border rounded-3 shadow-xs">
+                <label class="small text-muted d-block fw-bold mb-1" style="font-size:11px;">Pilih Lokasi Toko:</label>
+                <select class="form-select form-select-sm border-primary fw-medium" id="selectCabangToko" onchange="changeBranch(this.value)">
+                    <option value="0">NyamBakerry 1</option>
+                    <option value="1">NyamBakerry 2</option>
+                </select>
+            </div>
+            
+            <div class="mb-2 px-1">
+                <label class="small text-muted d-block fw-semibold mb-0.5" style="font-size:11px;">Alamat Toko:</label>
+                <span id="info-alamat" class="small fw-medium text-secondary">Memuat...</span>
+            </div>
+            
+            <div class="row g-2 mb-2 px-1">
+                <div class="col-6">
+                    <label class="small text-muted d-block fw-semibold mb-0.5" style="font-size:11px;">No WhatsApp:</label>
+                    <span id="info-wa" class="small fw-medium text-secondary">Memuat...</span>
+                </div>
+                <div class="col-6">
+                    <label class="small text-muted d-block fw-semibold mb-0.5" style="font-size:11px;">Jam Operasional:</label>
+                    <span id="info-jam" class="small fw-medium text-secondary">Memuat...</span>
+                </div>
+                <div class="col-12 mt-1">
+                    <label class="small text-muted d-block fw-semibold mb-0.5" style="font-size:11px;">Email Resmi:</label>
+                    <span id="info-email" class="small fw-medium text-secondary">Memuat...</span>
+                </div>
+            </div>
+            
+            <!-- Area Sosial Media & Logo -->
+            <div class="mb-3 px-1 mt-3">
+                <label class="small text-muted d-block fw-semibold mb-2" style="font-size:11px;">Sosial Media Kami:</label>
+                <div class="d-flex align-items-center gap-3">
+                    <a href="#" id="link-ig" target="_blank" class="text-decoration-none" title="Instagram">
+                        <i class="fa-brands fa-instagram fs-4" style="color: #E1306C;"></i>
+                    </a>
+                    <a href="#" id="link-tiktok" target="_blank" class="text-decoration-none" title="TikTok">
+                        <i class="fa-brands fa-tiktok fs-4" style="color: #000000;"></i>
+                    </a>
+                    <a href="#" id="link-fb" target="_blank" class="text-decoration-none" title="Facebook">
+                        <i class="fa-brands fa-facebook fs-4" style="color: #1877F2;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <a href="#" id="info-maps-link" target="_blank" class="btn btn-sm btn-outline-primary w-100 fw-bold py-2 mt-3 rounded-pill">
+            <i class="fa-solid fa-location-dot me-2"></i>Buka Rute Google Maps
+        </a>
+    </div>
+</div>
+            </div>
+        </div>
+
+        <div id="t-manajemen" class="tab-content fade-in" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold m-0"><i class="fa-solid fa-cookie-bite me-2 text-primary"></i>Manajemen Menu</h4>
+                <button class="btn btn-sm nyam-btn rounded-pill px-3 shadow-sm" onclick="openAddProductModal()"><i class="fa-solid fa-plus me-1"></i> Tambah Menu Baru</button>
+            </div>
+            <div class="nyam-card p-3 mb-3">
+                <div class="input-group input-group-sm" style="max-width: 320px;">
+                    <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input type="text" id="searchDataProduk" class="form-control border-start-0" placeholder="Cari nama menu..." oninput="renderDataProduk()">
+                </div>
+            </div>
+            <div class="nyam-card overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 text-nowrap">
+                        <thead class="table-light small text-uppercase">
+                            <tr>
+                                <th>Nama Produk</th>
+                                <th>Kategori</th>
+                                <th>Deskripsi Ringkas</th>
+                                <th>Harga Jual</th>
+                                <th>Label Tag</th>
+                                <th style="width: 100px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-produk-body" class="small"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="t-pos" class="tab-content fade-in" style="display: none;">
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <h4 class="fw-bold mb-3"><i class="fa-solid fa-cash-register me-2 text-success"></i>Kasir POS</h4>
+                    <div class="row row-cols-1 row-cols-sm-2 g-3" id="pos-product-list" style="max-height: 600px; overflow-y: auto; padding-right:4px;"></div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="nyam-card p-4 bg-body-tertiary sticky-lg-top" style="top: 85px; z-index:10;">
+                        <h5 class="fw-bold mb-3"><i class="fa-solid fa-shopping-cart text-primary me-2"></i>Keranjang Kasir Intern</h5>
+                        <hr class="opacity-25">
+                        <div id="pos-cart-wrapper" class="vstack gap-2 mb-3" style="max-height: 280px; overflow-y: auto;"></div>
+                        <hr class="opacity-25">
+                        <div class="d-flex justify-content-between align-items-center fw-bold mb-4 fs-5 px-1">
+                            <span>TOTAL BAYAR:</span>
+                            <span class="text-primary" id="pos-cart-total">Rp 0</span>
+                        </div>
+                        <button class="btn btn-success w-100 py-2.5 rounded-pill fw-bold shadow-sm" onclick="checkoutTransaksi()">
+                            <i class="fa-solid fa-receipt me-2"></i>Selesai & Cetak Nota Terintegrasi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="t-laporan" class="tab-content fade-in" style="display: none;">
+            <h4 class="fw-bold mb-3"><i class="fa-solid fa-chart-line me-2 text-primary"></i>Laporan Omset Realtime</h4>
+            <div class="nyam-card p-4 mb-4">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold">Dari Tanggal</label>
+                        <input type="date" id="filterStartTanggal" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold">Sampai Tanggal</label>
+                        <input type="date" id="filterEndTanggal" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-sm btn-primary w-100 rounded-pill py-2 fw-semibold" onclick="renderLaporan()"><i class="fa-solid fa-filter me-2"></i>Filter Rentang Waktu</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="p-3 rounded-4 bg-success text-white shadow-xs">
+                        <div class="small text-uppercase fw-semibold opacity-75 mb-1" style="font-size:11px;">Total Pendapatan Terfilter</div>
+                        <h3 class="fw-bold m-0" id="lap-total-pendapatan">Rp 0</h3>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="p-3 rounded-4 bg-info text-white shadow-xs">
+                        <div class="small text-uppercase fw-semibold opacity-75 mb-1" style="font-size:11px;">Jumlah Transaksi Berhasil</div>
+                        <h3 class="fw-bold m-0" id="lap-total-transaksi">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="nyam-card overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light small text-uppercase">
+                            <tr>
+                                <th>ID Transaksi</th>
+                                <th>Tanggal / Waktu</th>
+                                <th>Item Terjual</th>
+                                <th class="text-end">Total Pembayaran</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-laporan-body" class="small"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="t-pengguna" class="tab-content fade-in" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold m-0"><i class="fa-solid fa-users me-2 text-primary"></i>Kelola Akun Otoritas</h4>
+                <button class="btn btn-sm nyam-btn rounded-pill px-3 shadow-sm" onclick="openAddUserModal()"><i class="fa-solid fa-user-plus me-1"></i> Tambah Pengguna</button>
+            </div>
+            <div class="nyam-card overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light small text-uppercase">
+                            <tr>
+                                <th>Username</th>
+                                <th>Hak Akses / Jabatan</th>
+                                <th>Sandi Akses</th>
+                                <th>No WhatsApp</th>
+                                <th>Status</th>
+                                <th style="width: 100px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-pengguna-body" class="small"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div id="t-cabang" class="tab-content fade-in" style="display: none;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold m-0"><i class="fa-solid fa-code-branch me-2 text-primary"></i>Kelola Cabang</h4>
+        <button class="btn btn-sm nyam-btn rounded-pill px-3 shadow-sm" onclick="openAddBranchModal()">
+            <i class="fa-solid fa-plus me-1"></i> Tambah Cabang
+        </button>
+    </div>
+    <div class="nyam-card overflow-hidden">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light small text-uppercase">
+                <tr>
+                    <th>Nama Cabang</th>
+                    <th>Alamat</th>
+                    <th>WhatsApp</th>
+                    <th>Jam Op.</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody id="tabel-cabang-body" class="small"></tbody>
+        </table>
+    </div>
+</div>
+
+    </main>
+
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 360px;">
+            <div class="modal-content border-0 rounded-4 shadow-lg">
+                <div class="modal-body p-4 text-center">
+                    <i class="fa-solid fa-lock text-primary fs-1 mb-3"></i>
+                    <h5 class="fw-bold mb-3">Login Otentikasi</h5>
+                    <div class="mb-3 text-start">
+                        <label class="form-label small fw-semibold">Username Akun</label>
+                        <input type="text" id="loginUser" class="form-control" placeholder="Masukkan username...">
+                    </div>
+                    <div class="mb-4 text-start">
+                        <label class="form-label small fw-semibold">Password Sandi</label>
+                        <input type="password" id="loginPass" class="form-control" placeholder="Masukkan password...">
+                    </div>
+                    <button class="btn nyam-btn w-100 rounded-pill py-2 mb-2" onclick="prosesLogin()">Validasi Masuk Sistem</button>
+                    <button class="btn btn-light w-100 rounded-pill small border" data-bs-toggle="modal">Batalkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="detailProductModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <span class="badge bg-secondary" id="detailCat">Kategori</span>
+                    <button type="button" class="btn-close" data-bs-toggle="modal"></button>
+                </div>
+                <div class="modal-body p-4 pt-2">
+                    <div class="text-center mb-3">
+                        <img id="detailImg" src="" class="img-fluid rounded-3 object-fit-cover w-100" style="max-height: 240px; background-color:#f1f3f7;">
+                        <div id="detailThumbnails" class="d-flex justify-content-center gap-2 mt-2" style="display:none;"></div>
+                    </div>
+                    <h4 class="fw-bold mb-1 text-dark" id="detailName">Nama Produk</h4>
+                    <h5 class="text-primary fw-bold mb-3" id="detailPrice">Rp 0</h5>
+                    <p class="text-secondary small bg-light p-3 rounded-3" id="detailDesc">Deskripsi ringkas sajian...</p>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary w-50 rounded-pill" data-bs-toggle="modal"><i class="fa-solid fa-xmark me-1"></i>Tutup</button>
+                        <a href="#" id="detailWaLink" target="_blank" class="btn btn-success w-50 rounded-pill text-white fw-bold d-flex align-items-center justify-content-center">
+                            <i class="fa-brands fa-whatsapp me-2"></i>Tanya Admin WA
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="productFormModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-bottom px-4">
+                    <h5 class="modal-title fw-bold" id="productModalTitle">Tambah Menu Baru</h5>
+                    <button type="button" class="btn-close" data-bs-toggle="modal"></button>
+                </div>
+                <div class="modal-body p-4 small">
+                    <input type="hidden" id="formProductIdx">
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold mb-1">Nama Varian Menu</label>
+                        <input type="text" id="formProductName" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold mb-1">Kelompok Kategori</label>
+                        <select id="formProductCategory" class="form-select form-select-sm">
+                            <option value="Roti">🍞 Aneka Roti</option>
+                            <option value="Kue Kering">🍪 Kue Kering</option>
+                            <option value="Kue Basah">🍰 Kue Basah</option>
+                            <option value="Coffee Break">☕ Coffee Break</option>
+                            <option value="Snack">🍿 Snack</option>
+                            <option value="Aksesoris">🎀 Aksesoris</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold mb-1">Harga Jual Pokok (Rp)</label>
+                        <input type="number" id="formProductPrice" class="form-control form-control-sm" required>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold mb-1">Deskripsi Singkat Sajian</label>
+                        <textarea id="formProductDesc" class="form-control form-control-sm" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold mb-1">File Gambar Produk</label>
+                        <input type="file" id="formProductImageFile" class="form-control form-control-sm" accept="image/*" multiple>
+                    </div>
+                    
+                    <div class="row g-2 border-top pt-2">
+                        <div class="col-4">
+                            <div class="form-check form-switch mt-1">
+                                <input class="form-check-input" type="checkbox" id="formProductFeatured">
+                                <label class="form-check-label fw-medium">Unggulan</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-check form-switch mt-1">
+                                <input class="form-check-input" type="checkbox" id="formProductPromo" onchange="toggleDiskonInput()">
+                                <label class="form-check-label fw-medium">Promo</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="form-check form-switch mt-1">
+                                <input class="form-check-input" type="checkbox" id="formProductTerbaru">
+                                <label class="form-check-label fw-medium">Baru</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 bg-danger-subtle p-2 rounded border border-danger border-opacity-25" id="wrapDiskonInput" style="display: none;">
+                        <label class="form-label text-danger fw-bold mb-1" style="font-size: 11px;">Besar Diskon Promo (%)</label>
+                        <div class="input-group input-group-sm">
+                            <input type="number" id="formProductDiscount" class="form-control fw-bold text-center text-danger" placeholder="Contoh: 15" min="1" max="99">
+                            <span class="input-group-text bg-white text-danger fw-bold">%</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-top px-4">
+                    <button class="btn btn-sm btn-light border rounded-pill px-3" data-bs-toggle="modal">Tutup</button>
+                    <button class="btn btn-sm nyam-btn rounded-pill px-4" onclick="saveProduct()">Simpan Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="userFormModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" style="max-width: 380px;">
+            <div class="modal-content border-0 rounded-4">
+                <div class="modal-header border-bottom px-4">
+                    <h5 class="modal-title fw-bold">Data Kelola Akun</h5>
+                    <button type="button" class="btn-close" data-bs-toggle="modal"></button>
+                </div>
+                <div class="modal-body p-4 small">
+                    <input type="hidden" id="formUserIdx">
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold mb-1">Username</label>
+                        <input type="text" id="formUserUsername" class="form-control form-control-sm">
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold mb-1">Bagian (Jabatan)</label>
+                        <select id="formUserRole" class="form-select form-select-sm">
+                            <option value="staff">Staff Kasir</option>
+                            <option value="admin">Administrator</option>
+                            <option value="pemilik">Owner / Pemilik</option>
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <label class="form-label fw-semibold mb-1">Kata Sandi Akses</label>
+                        <input type="text" id="formUserPassword" class="form-control form-control-sm">
+                    </div>
+                    <div class="mb-0">
+                        <label class="form-label fw-semibold mb-1">No WhatsApp Terhubung</label>
+                        <input type="text" id="formUserWA" class="form-control form-control-sm" placeholder="Contoh: 6281xxxx">
+                    </div>
+                </div>
+                <div class="modal-footer border-top px-4">
+                    <button class="btn btn-sm btn-light border rounded-pill px-3" data-bs-toggle="modal">Batal</button>
+                    <button class="btn btn-sm nyam-btn rounded-pill px-4" onclick="saveUser()">Simpan Akun</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notaPrintArea" style="display: none; font-family: monospace; font-size: 12px; color: #000; padding: 20px;"></div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // SEED DATA AWAL SEBAGAI CADANGAN INTEGRAL
+        var seedProducts = window.seedProducts || [
+            { name: "Roti Manis Coklat Premium", category: "Roti", description: "Roti manis isi coklat lumer lezat berlimpah.", price: 9500, image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500", isFeatured: true, stock: 25, reviews: [] },
+            { name: "Kue Kering Nastar Wisman", category: "Kue Kering", description: "Nastar lembut isi selai nanas asli buatan rumah.", price: 85000, image: "https://images.unsplash.com/photo-1590080875515-8a3a8dc5735e?w=500", isPromo: true, discount: 15, stock: 12, reviews: [] },
+            { name: "Brownies Panggang Fudgy", category: "Kue Basah", description: "Brownies coklat padat dengan crust shiny di atasnya.", price: 45000, image: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=500", isTerbaru: true, stock: 15, reviews: [] }
+        ];
+        window.seedProducts = seedProducts;
+
+        var seedUsers = window.seedUsers || [
+            { username: "admin", role: "admin", password: "123", whatsapp: "6282241645858", status: "aktif" },
+            { username: "staff1", role: "staff", password: "kasir", whatsapp: "628123456789", status: "aktif" }
+        ];
+        window.seedUsers = seedUsers;
+
+        var seedBranches = window.seedBranches || [
+            { name: "NyamBakeryy Bumiayu", alamat: "Jl. Raya Bumiayu No. 45, Brebes, Jawa Tengah", wa: "6282241645858", jam: "07:00 - 21:00", maps: "https://maps.google.com" },
+            { name: "NyamBakeryy Purwokerto", alamat: "Jl. Jenderal Sudirman No. 102, Purwokerto, Jawa Tengah", wa: "628123456789", jam: "08:00 - 22:00", maps: "https://maps.google.com" }
+        ];
+        window.seedBranches = seedBranches;
+
+        // LOCALSTORAGE WRAPPER SAFE-GET/SET
+        function safeGetItem(k, fallback) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : fallback; } catch(e) { return fallback; } }
+        function safeSetItem(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) { console.error(e); } }
+
+        var branches = window.branches || safeGetItem('nyambakeryy_branches', seedBranches);
+        window.branches = branches;
+        var products = window.products || safeGetItem('nyambakeryy_prod', seedProducts);
+        window.products = products;
+        var users = window.users || safeGetItem('nyambakeryy_user', seedUsers);
+        window.users = users;
+        var storeReviews = window.storeReviews || safeGetItem('nyambakeryy_reviews', []);
+        window.storeReviews = storeReviews;
+        var transactions = window.transactions || safeGetItem('nyambakeryy_trans', []);
+        window.transactions = transactions;
+
+        var currentUser = window.currentUser || { username: "Pengunjung", role: "viewer" };
+        window.currentUser = currentUser;
+        var selectedBranchIdx = window.selectedBranchIdx || 0;
+        window.selectedBranchIdx = selectedBranchIdx;
+        var activeKategoriFilter = window.activeKategoriFilter || "";
+        window.activeKategoriFilter = activeKategoriFilter;
+        var expandedCategories = window.expandedCategories || {};
+        window.expandedCategories = expandedCategories;
+
+        var visitorCart = window.visitorCart || [];
+        window.visitorCart = visitorCart;
+        var cart = window.cart || []; // Keranjang POS internal kasir
+        window.cart = cart;
+        var currentEditingProductImage = window.currentEditingProductImage || [];
+        window.currentEditingProductImage = currentEditingProductImage;
+
+        // MODAL INSTANTIATIONS
+        var loginModalObj = window.loginModalObj;
+        var detailProductModalObj = window.detailProductModalObj;
+        var productFormModalObj = window.productFormModalObj;
+        var userFormModalObj = window.userFormModalObj;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loginModalObj = new bootstrap.Modal(document.getElementById('loginModal'));
+            detailProductModalObj = new bootstrap.Modal(document.getElementById('detailProductModal'));
+            productFormModalObj = new bootstrap.Modal(document.getElementById('productFormModal'));
+            userFormModalObj = new bootstrap.Modal(document.getElementById('userFormModal'));
+            
+            // Atur rentang tanggal laporan default ke hari ini
+            const tglSkg = new Date().toISOString().split('T')[0];
+            document.getElementById('filterStartTanggal').value = tglSkg;
+            document.getElementById('filterEndTanggal').value = tglSkg;
+
+            loadAll();
+        });
+
+        function loadAll() {
+            renderKatalog();
+            renderUlasan();
+            renderVisitorCart();
+            changeBranch(selectedBranchIdx);
+            renderDataProduk();
+            renderPOSProducts();
+            renderPOSCart();
+            renderLaporan();
+            renderDataPengguna();
+            updateUIRole();
+        }
+
+        // DESIGN TOAST ALERT SYSTEM CUSTOM
+        function toast(msg, type = "info") {
+            const container = document.getElementById('toastContainer');
+            const id = 'toast-' + Date.now();
+            const bg = type === "success" ? "bg-success" : (type === "danger" ? "bg-danger" : "bg-dark");
+            
+            const el = document.createElement('div');
+            el.id = id;
+            el.className = `toast align-items-center text-white ${bg} border-0 show mb-2 fade-in`;
+            el.setAttribute('role', 'alert');
+            el.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body small fw-medium"><i class="fa-solid fa-circle-info me-2"></i>${msg}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>`;
+            container.appendChild(el);
+            setTimeout(() => { try { el.remove(); } catch(e){} }, 3000);
+        }
+
+        // SWITCH TAB CONTROLLER
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+            document.getElementById(tabId).style.display = 'block';
+            document.querySelectorAll('.navbar-nav .nav-link').forEach(el => el.classList.remove('active'));
+            const actNav = document.getElementById('nav-' + tabId);
+            if(actNav) actNav.classList.add('active');
+            
+            // Collapse mobile menu navbar auto
+            const bsCollapse = bootstrap.Collapse.getInstance(document.getElementById('mainNav'));
+            if(bsCollapse) bsCollapse.hide();
+        }
+
+        // THEME TOGGLER
+        function toggleTheme() {
+            const html = document.documentElement;
+            const cur = html.getAttribute('data-bs-theme');
+            const next = cur === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-bs-theme', next);
+            document.getElementById('theme-icon').className = next === 'dark' ? 'fa-solid fa-sun fs-5' : 'fa-solid fa-moon fs-5';
+        }
+
+        // RENDER BRANCH INFO
+        function changeBranch(idx) {
+            selectedBranchIdx = parseInt(idx);
+            document.getElementById('selectCabangToko').value = selectedBranchIdx;
+            const b = branches[selectedBranchIdx];
+            document.getElementById('info-alamat').innerText = b.alamat;
+            document.getElementById('info-wa').innerText = "+" + b.wa;
+            document.getElementById('info-jam').innerText = b.jam;
+            document.getElementById('info-maps-link').href = b.maps;
+        }
+
+        // FORMAT RUPIAH CURRENCY UTIL
+        function formatRupiah(num) {
+            return "Rp " + Number(num).toLocaleString('id-ID');
+        }
+
+        // FILE BASE64 READER UTIL
+        function toBase64(file) {
+            return new Promise((res, rej) => {
+                const r = new FileReader();
+                r.readAsDataURL(file);
+                r.onload = () => res(r.result);
+                r.onerror = e => rej(e);
+            });
+        }
+
+        // ================= SYSTEM KATALOG & GRID GENERATOR =================
+        function filterKategori(cat) {
+            activeKategoriFilter = cat;
+            document.querySelectorAll('.active-cat-btn').forEach(b => b.classList.replace('btn-primary', 'btn-outline-secondary'));
+            const targetBtn = cat === '' ? document.getElementById('cat-all') : document.getElementById(`cat-${getCatSlug(cat)}`);
+            if(targetBtn) targetBtn.classList.replace('btn-outline-secondary', 'btn-primary');
+            renderKatalog();
+        }
+
+        function getCatSlug(c) {
+            if(c === 'Kue Kering') return 'kering'; if(c === 'Kue Basah') return 'basah';
+            if(c === 'Coffee Break') return 'coffee'; return c.toLowerCase();
+        }
+
+        function toggleSeeAllCategory(cat) {
+            expandedCategories[cat] = !expandedCategories[cat];
+            renderKatalog();
+        }
+
+        function renderKatalog() {
+            const wrapper = document.getElementById('katalog-sections-wrapper');
+            wrapper.innerHTML = "";
+            const searchVal = document.getElementById('searchKatalog').value.toLowerCase().trim();
+
+            let kategoriList = ["Roti", "Kue Kering", "Kue Basah", "Coffee Break", "Snack", "Aksesoris"];
+            if(activeKategoriFilter !== "") {
+                kategoriList = [activeKategoriFilter];
+            }
+
+            let katalogHtml = "";
+
+            kategoriList.forEach(cat => {
+                let catProducts = products.filter(p => p.category === cat);
+                if(searchVal !== "") {
+                    catProducts = catProducts.filter(p => p.name.toLowerCase().includes(searchVal));
+                }
+
+                if(catProducts.length === 0) return;
+
+                const isExpanded = expandedCategories[cat] || false;
+                let displayProducts = catProducts;
+                if(catProducts.length > 4 && searchVal === "" && !isExpanded) {
+                    displayProducts = catProducts.slice(0, 4);
+                }
+
+                let seeMoreBtnHtml = '';
+                if(catProducts.length > 4 && searchVal === "") {
+                    seeMoreBtnHtml = `<button class="btn btn-sm btn-link text-primary fw-bold text-decoration-none" onclick="toggleSeeAllCategory('${cat}')">${isExpanded ? 'Sembunyikan' : 'Lihat Selengkapnya'} <i class="fa-solid ${isExpanded ? 'fa-chevron-up' : 'fa-chevron-right'} ms-1"></i></button>`;
+                }
+
+                let cardsHtml = displayProducts.map(p => {
+                    const origIdx = products.findIndex(orig => orig.name === p.name);
+                    const img = (Array.isArray(p.image) && p.image[0]) ? p.image[0] : (p.image || 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500');
+
+                    let badges = "";
+                    if(p.isFeatured) badges += `<span class="badge bg-warning text-dark rounded-pill px-2 py-0.5 small me-1">🔥 Top</span>`;
+                    if(p.isPromo) badges += `<span class="badge bg-danger rounded-pill px-2 py-0.5 small me-1">% Promo</span>`;
+                    if(p.isTerbaru) badges += `<span class="badge bg-info rounded-pill px-2 py-0.5 small me-1">✨ Baru</span>`;
+
+                    let hargaTampil = `<span class="text-primary fw-bold fs-6">${formatRupiah(p.price)}</span>`;
+                    let hargaFinal = p.price;
+                    
+                    // Kalkulasi Diskon Promo
+                    if(p.isPromo && p.discount > 0) {
+                        hargaFinal = Math.round(p.price - (p.price * p.discount / 100)); 
+                        hargaTampil = `<div>
+                            <span class="text-danger fw-bold fs-6">${formatRupiah(hargaFinal)}</span> 
+                            <small class="text-decoration-line-through text-muted" style="font-size:11px;">${formatRupiah(p.price)}</small>
+                            <span class="badge bg-danger ms-1" style="font-size:9px;">-${p.discount}%</span>
+                        </div>`;
+                    }
+
+                    return `
+                    <div class="col-xl-3 col-lg-4 col-sm-6">
+                        <div class="card nyam-card product-card h-100 d-flex flex-column justify-content-between border-0 shadow-sm">
+                            <div>
+                                <div class="position-relative overflow-hidden rounded-top" style="height: 160px; background-color: #f1f3f7;">
+                                    <img src="${img}" class="w-100 h-100 object-fit-cover" alt="${p.name}">
+                                    <div class="position-absolute top-2 start-2 d-flex flex-wrap gap-1">
+                                        ${badges}
+                                    </div>
+                                </div>
+                                <div class="p-3 pb-0">
+                                    <h6 class="fw-bold mb-1 text-dark text-truncate-2" style="min-height: 38px; font-size: 14px; line-height: 1.4;">
+                                        ${p.name}
+                                    </h6>
+                                </div>
+                            </div>
+                            <div class="p-3 pt-0">
+                                <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2 mb-3">
+                                    ${hargaTampil}
+                                    <span class="text-secondary small fw-medium" style="font-size:11px; cursor:pointer;" onclick="openDetailProductModal(${origIdx})">
+                                        <i class="fa-solid fa-circle-info text-info me-1"></i>Detail
+                                    </span>
+                                </div>
+                                <button class="btn btn-sm nyam-btn w-100 rounded-pill mb-2 py-2" style="font-size:12px;" onclick="addVisitorCart('${p.name.replace(/'/g, "\\'")}', ${hargaFinal})">
+                                    <i class="fa-solid fa-cart-plus me-1"></i>+ Keranjang
+                                </button>
+                                <a href="https://wa.me/${branches[selectedBranchIdx].wa.replace(/[^0-9]/g,'')}?text=Halo%20Admin,%20saya%20tertarik%20pesan%20sajian%20*${encodeURIComponent(p.name)}*" 
+                                   target="_blank" class="btn btn-sm btn-light border text-success w-100 rounded-pill py-1.5" style="font-size: 11px; font-weight: 600;">
+                                    <i class="fa-brands fa-whatsapp me-1 text-success"></i>Pesan Langsung
+                                </a>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join('');
+
+                katalogHtml += `
+                <div class="mb-4 fade-in">
+                    <div class="d-flex justify-content-between align-items-center mb-2 px-1">
+                        <h5 class="fw-extrabold m-0 text-dark border-start border-primary border-4 ps-2">${cat}</h5>
+                        ${seeMoreBtnHtml}
+                    </div>
+                    <div class="row g-3 row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">${cardsHtml}</div>
+                </div>`;
+            });
+
+            wrapper.innerHTML = katalogHtml || `<div class="text-center my-5 text-muted"><i class="fa-solid fa-cookie fs-2 opacity-25 d-block mb-2"></i>Menu sajian tidak ditemukan...</div>`;
+        }
+
+        // ================= DETAIL PRODUK (GALERI & REVIEW SPESIFIK) =================
+        function openDetailProductModal(idx) {
+            const p = products[idx];
+            const imgs = Array.isArray(p.image) ? p.image : [p.image || 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500'];
+            
+            const mainImg = document.getElementById('detailImg');
+            mainImg.src = imgs[0];
+            
+            const thumbContainer = document.getElementById('detailThumbnails');
+            thumbContainer.innerHTML = "";
+
+            if(imgs.length > 1) {
+                thumbContainer.style.display = 'flex';
+                imgs.forEach(url => {
+                    const thumb = document.createElement('img');
+                    thumb.src = url;
+                    thumb.style = "width:45px; height:45px; object-fit:cover; cursor:pointer; border-radius:6px;";
+                    thumb.className = "border shadow-xs";
+                    thumb.onclick = () => { mainImg.src = url; };
+                    thumbContainer.appendChild(thumb);
+                });
+            } else {
+                thumbContainer.style.display = 'none';
+            }
+
+            document.getElementById('detailCat').innerText = p.category;
+            document.getElementById('detailName').innerText = p.name;
+            
+            let hg = p.price;
+            if(p.isPromo && p.discount > 0) hg = Math.round(p.price - (p.price * p.discount / 100));
+            document.getElementById('detailPrice').innerText = formatRupiah(hg);
+            
+            document.getElementById('detailDesc').innerText = p.description || "Tidak ada deskripsi rinkaan untuk sajian varian menu kue/roti ini.";
+            
+            document.getElementById('detailWaLink').href = `https://wa.me/${branches[selectedBranchIdx].wa.replace(/[^0-9]/g,'')}?text=Halo%20Admin,%20saya%20ingin%20tanya%20detail%20sajian%20*${encodeURIComponent(p.name)}*`;
+            detailProductModalObj.show();
+        }
+
+        // ================= INTERAKSI REVIEW / ULASAN TOKO =================
+        function renderUlasan() {
+            const container = document.getElementById('ulasan-wrapper');
+            container.innerHTML = "";
+
+            if(storeReviews.length === 0) {
+                container.innerHTML = `<div class="text-center py-4 text-muted small"><i class="fa-solid fa-comments opacity-25 fs-4 d-block mb-1"></i>Belum ada ulasan toko</div>`;
+                return;
+            }
+
+            let html = [...storeReviews].reverse().map(r => {
+                let stars = "";
+                for(let i=1; i<=5; i++) {
+                    stars += i <= r.rating ? '<i class="fa-solid fa-star text-warning me-0.5"></i>' : '<i class="fa-regular fa-star text-muted me-0.5"></i>';
+                }
+                
+                let fotoHtml = "";
+                if (r.image && r.image !== "") {
+                    fotoHtml = `
+                    <div class="mt-2 position-relative rounded overflow-hidden shadow-xs" style="width: 65px; height: 65px; border: 1px solid #edf0f5;">
+                        <img src="${r.image}" class="w-100 h-100 object-fit-cover" style="cursor: pointer;" onclick="window.open('${r.image}', '_blank')">
+                    </div>`;
+                }
+
+                return `
+                <div class="p-3 border rounded-3 bg-white mb-2 fade-in shadow-xs" style="border-color:#f1f3f7 !important;">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-bold small text-dark" style="font-size:12.5px;">${r.name}</span>
+                        <div class="d-flex align-items-center" style="font-size: 10px;">${stars}</div>
+                    </div>
+                    <p class="text-secondary mb-0 mt-1.5 text-break" style="font-size: 11.5px; line-height: 1.45; font-style: italic;">
+                        "${r.text}"
+                    </p>
+                    ${fotoHtml}
+                </div>`;
+            }).join('');
+
+            container.innerHTML = html;
+        }
+
+        function kirimUlasan() {
+            const name = document.getElementById('formReviewName').value.trim();
+            const text = document.getElementById('formReviewText').value.trim();
+            const rating = parseInt(document.getElementById('formReviewRating').value);
+            const fileInput = document.getElementById('formReviewImage');
+
+            if(!name || !text) { alert('Nama dan isi ulasan wajib diisi lengkap!'); return; }
+
+            const file = fileInput.files[0];
+            const executeSave = (imgBase64 = "") => {
+                storeReviews.push({ name, text, rating, image: imgBase64, timestamp: Date.now() });
+                safeSetItem('nyambakeryy_reviews', storeReviews);
+                
+                document.getElementById('formReviewName').value = "";
+                document.getElementById('formReviewText').value = "";
+                fileInput.value = "";
+                
+                renderUlasan();
+                toast('Terima kasih atas ulasan Anda!', 'success');
+            };
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) { executeSave(e.target.result); };
+                reader.readAsDataURL(file);
+            } else {
+                executeSave("");
+            }
+        }
+
+        // ================= KERANJANG MANDIRI PENGUNJUNG =================
+        function addVisitorCart(name, price) {
+            const exist = visitorCart.find(x => x.name === name);
+            if(exist) exist.qty++; else visitorCart.push({ name, price, qty: 1 });
+            renderVisitorCart();
+            toast(`${name} sukses masuk keranjang!`, 'success');
+        }
+
+        function changeVisitorQty(name, delta) {
+            const item = visitorCart.find(x => x.name === name);
+            if(item) {
+                item.qty += delta;
+                if(item.qty <= 0) visitorCart = visitorCart.filter(x => x.name !== name);
+            }
+            renderVisitorCart();
+        }
+
+        function updateVisitorQtyDirectly(name, value) {
+            let newQty = parseInt(value);
+            if (isNaN(newQty) || newQty < 1) newQty = 1;
+            const item = visitorCart.find(i => i.name === name);
+            if (item) { item.qty = newQty; renderVisitorCart(); }
+        }
+
+        function renderVisitorCart() {
+            const wrapper = document.getElementById('visitor-cart-wrapper');
+            wrapper.innerHTML = "";
+
+            if(visitorCart.length === 0) {
+                wrapper.innerHTML = '<p class="text-muted small text-center my-4">Keranjang kosong. Tambahkan menu di atas!</p>';
+                document.getElementById('visitor-cart-total').innerText = "Rp 0";
+                return;
+            }
+
+            let total = 0;
+            visitorCart.forEach(c => {
+                total += (c.price * c.qty);
+                const itemEl = document.createElement('div');
+                itemEl.className = "p-2 border rounded-3 bg-white shadow-xs small text-dark mb-2 d-flex justify-content-between align-items-center";
+                itemEl.innerHTML = `
+                    <div style="max-width: 65%;">
+                        <span class="fw-bold d-block text-truncate" style="font-size:12px;">${c.name}</span>
+                        <small class="text-primary fw-semibold" style="font-size:11px;">${formatRupiah(c.price)}</small>
+                    </div>
+                    <div class="d-flex align-items-center gap-1.5 bg-light px-1 py-0.5 rounded-pill border">
+                        <button class="btn btn-link btn-sm p-0 px-1 text-decoration-none text-dark fw-bold" onclick="changeVisitorQty('${c.name.replace(/'/g, "\\'")}', -1)">-</button>
+                        <input type="number" class="form-control form-control-sm text-center p-0 border-0 bg-transparent fw-bold" style="width: 25px; font-size:11px;" value="${c.qty}" onchange="updateVisitorQtyDirectly('${c.name.replace(/'/g, "\\'")}', this.value)">
+                        <button class="btn btn-link btn-sm p-0 px-1 text-decoration-none text-dark fw-bold" onclick="changeVisitorQty('${c.name.replace(/'/g, "\\'")}', 1)">+</button>
+                    </div>`;
+                wrapper.appendChild(itemEl);
+            });
+            document.getElementById('visitor-cart-total').innerText = formatRupiah(total);
+        }
+
+        function checkoutVisitorWA() {
+            if(visitorCart.length === 0) { alert('Keranjang masih kosong!'); return; }
+            let teks = `*REKAP PESANAN NYAMBAKERYY*\nCabang: ${branches[selectedBranchIdx].name}\n\n`;
+            let total = 0;
+            visitorCart.forEach((c, i) => {
+                teks += `${i+1}. *${c.name}* x${c.qty} = ${formatRupiah(c.price * c.qty)}\n`;
+                total += (c.price * c.qty);
+            });
+            teks += `\n*TOTAL ESTIMASI:* ${formatRupiah(total)}\n\nMohon konfirmasi ketersediaan stok admin toko, terima kasih!`;
+            window.open(`https://wa.me/${branches[selectedBranchIdx].wa.replace(/[^0-9]/g,'')}?text=${encodeURIComponent(teks)}`, '_blank');
+        }
+
+        // ================= AUTENTIKASI LOGIN INTERNAL SYSTEM =================
+        function prosesLogin() {
+            const u = document.getElementById('loginUser').value.trim();
+            const p = document.getElementById('loginPass').value.trim();
+            
+            const match = users.find(x => x.username === u && x.password === p && x.status === "aktif");
+            if(match) {
+                currentUser = { username: match.username, role: match.role };
+                loginModalObj.hide();
+                toast(`Selamat datang kembali, ${match.username}!`, 'success');
+                loadAll();
+            } else {
+                alert('Otentikasi internal gagal! Username atau password tidak sesuai.');
+            }
+        }
+
+        function updateUIRole() {
+            document.getElementById('dNm').innerText = currentUser.username;
+            document.getElementById('dRl').innerText = currentUser.role;
+            document.getElementById('dAv').innerText = currentUser.username.charAt(0).toUpperCase();
+
+            const adminItems = document.querySelectorAll('.admin-only');
+            if(currentUser.role === 'admin' || currentUser.role === 'pemilik') {
+                adminItems.forEach(el => el.style.display = 'block');
+                document.getElementById('btnP').innerHTML = '<i class="fa-solid fa-right-from-bracket me-1"></i>Keluar Akun';
+                document.getElementById('btnP').onclick = logout;
+                document.getElementById('btnP').removeAttribute('data-bs-toggle');
+            } else {
+                adminItems.forEach(el => el.style.display = 'none');
+                document.getElementById('btnP').innerHTML = '<i class="fa-solid fa-right-to-bracket me-1"></i>Login Internal';
+                document.getElementById('btnP').setAttribute('data-bs-toggle', 'modal');
+                document.getElementById('btnP').onclick = null;
+            }
+        }
+
+        function logout() {
+            currentUser = { username: "Pengunjung", role: "viewer" };
+            switchTab('t-dashboard');
+            loadAll();
+            toast('Berhasil keluar dari sesi internal.', 'info');
+        }
+
+        // ================= ADMIN DATA PRODUK MANAJEMEN =================
+        function renderDataProduk() {
+            const tbody = document.getElementById('tabel-produk-body');
+            tbody.innerHTML = "";
+            const searchVal = document.getElementById('searchDataProduk').value.toLowerCase().trim();
+
+            let filterProds = products;
+            if(searchVal !== "") {
+                filterProds = products.filter(p => p.name.toLowerCase().includes(searchVal));
+            }
+
+            filterProds.forEach((p, idx) => {
+                const tr = document.createElement('tr');
+                let tags = "";
+                if(p.isFeatured) tags += `<span class="badge bg-warning text-dark me-1">Top</span>`;
+                if(p.isPromo) tags += `<span class="badge bg-danger me-1">Promo</span>`;
+                if(p.isTerbaru) tags += `<span class="badge bg-info text-dark me-1">Baru</span>`;
+
+                tr.innerHTML = `
+                    <td><strong>${p.name}</strong></td>
+                    <td><span class="text-muted">${p.category}</span></td>
+                    <td><div class="text-truncate" style="max-width:180px;">${p.description || '-'}</div></td>
+                    <td><span class="fw-bold text-dark">${formatRupiah(p.price)}</span></td>
+                    <td>${tags || '-'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary py-0.5 px-2" onclick="openEditProductModal(${idx})"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <button class="btn btn-sm btn-outline-danger py-0.5 px-2" onclick="hapusProduk(${idx})"><i class="fa-solid fa-trash"></i></button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openAddProductModal() {
+            document.getElementById('productModalTitle').innerText = "Tambah Menu Baru";
+            document.getElementById('formProductIdx').value = "";
+            document.getElementById('formProductName').value = "";
+            document.getElementById('formProductPrice').value = "";
+            document.getElementById('formProductDesc').value = "";
+            document.getElementById('formProductImageFile').value = "";
+            
+            document.getElementById('formProductFeatured').checked = false;
+            document.getElementById('formProductPromo').checked = false;
+            document.getElementById('formProductTerbaru').checked = false;
+            document.getElementById('formProductDiscount').value = "";
+            toggleDiskonInput();
+            
+            productFormModalObj.show();
+        }
+
+        function openEditProductModal(idx) {
+            const p = products[idx];
+            document.getElementById('productModalTitle').innerText = "Perbarui Menu Varian";
+            document.getElementById('formProductIdx').value = idx;
+            document.getElementById('formProductName').value = p.name;
+            document.getElementById('formProductCategory').value = p.category;
+            document.getElementById('formProductPrice').value = p.price;
+            document.getElementById('formProductDesc').value = p.description || "";
+            document.getElementById('formProductImageFile').value = "";
+            
+            document.getElementById('formProductFeatured').checked = p.isFeatured || false;
+            document.getElementById('formProductPromo').checked = p.isPromo || false;
+            document.getElementById('formProductTerbaru').checked = p.isTerbaru || false;
+            document.getElementById('formProductDiscount').value = p.discount || "";
+            toggleDiskonInput();
+            
+            currentEditingProductImage = Array.isArray(p.image) ? p.image : [p.image];
+            productFormModalObj.show();
+        }
+
+        function toggleDiskonInput() {
+            const isPromo = document.getElementById('formProductPromo').checked;
+            const wrapDiskon = document.getElementById('wrapDiskonInput');
+            if (isPromo) {
+                wrapDiskon.style.display = 'block';
+            } else {
+                wrapDiskon.style.display = 'none';
+                document.getElementById('formProductDiscount').value = '';
+            }
+        }
+
+        async function saveProduct() {
+            const idxVal = document.getElementById('formProductIdx').value;
+            const idx = idxVal !== "" ? parseInt(idxVal) : "";
+            const name = document.getElementById('formProductName').value.trim();
+            const category = document.getElementById('formProductCategory').value;
+            const price = parseInt(document.getElementById('formProductPrice').value);
+            const description = document.getElementById('formProductDesc').value.trim();
+            
+            const isFeatured = document.getElementById('formProductFeatured').checked;
+            const isPromo = document.getElementById('formProductPromo').checked;
+            const isTerbaru = document.getElementById('formProductTerbaru').checked;
+
+            let discountValue = 0;
+            if (isPromo) {
+                discountValue = parseInt(document.getElementById('formProductDiscount').value) || 0;
+            }
+
+            if(!name || isNaN(price)) { alert('Lengkapi isian nama dan harga pokok produk!'); return; }
+
+            const fileInput = document.getElementById('formProductImageFile');
+            let imageUrls = [];
+            
+            if (fileInput.files.length > 0) {
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    const base64 = await toBase64(fileInput.files[i]);
+                    imageUrls.push(base64);
+                }
+            } else {
+                if (idx !== "") {
+                    imageUrls = currentEditingProductImage;
+                } else {
+                    imageUrls = ["https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500"];
+                }
+            }
+
+            const data = { 
+                name, category, description, price, image: imageUrls, 
+                isFeatured, isPromo, isTerbaru, discount: discountValue, 
+                stock: 15, timestamp: Date.now(), 
+                reviews: idx !== "" ? (products[idx].reviews || []) : [] 
+            };
+            
+            if(idx === "") products.push(data); else products[idx] = data;
+            
+            safeSetItem('nyambakeryy_prod', products);
+            productFormModalObj.hide();
+            loadAll();
+            toast('Data menu berhasil disinkronisasi!', 'success');
+        }
+
+        function hapusProduk(idx) {
+            if(confirm('Hapus item menu kue/roti pilihan ini?')) {
+                products.splice(idx, 1);
+                safeSetItem('nyambakeryy_prod', products);
+                loadAll();
+            }
+        }
+
+        // ================= KASIR INTEGRATED POS LOGIC =================
+        function renderPOSProducts() {
+            const container = document.getElementById('pos-product-list');
+            container.innerHTML = "";
+            products.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "col";
+                const img = (Array.isArray(p.image) && p.image[0]) ? p.image[0] : (p.image || 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500');
+                
+                let posPrice = p.price;
+                if(p.isPromo && p.discount > 0) {
+                    posPrice = Math.round(p.price - (p.price * p.discount / 100));
+                }
+                
+                card.innerHTML = `
+                    <div class="p-2 border rounded-3 bg-white d-flex gap-2 align-items-center shadow-xs cursor-pointer" onclick="addPOSCart('${p.name.replace(/'/g, "\\'")}', ${posPrice})" style="cursor:pointer;">
+                        <img src="${img}" class="rounded object-fit-cover" style="width: 55px; height: 55px;">
+                        <div>
+                            <span class="fw-bold small text-dark d-block text-truncate" style="max-width:170px;">${p.name}</span>
+                            <small class="text-primary fw-medium">${formatRupiah(posPrice)}</small>
+                        </div>
+                    </div>`;
+                container.appendChild(card);
+            });
+        }
+
+        function addPOSCart(name, price) {
+            const exist = cart.find(x => x.name === name);
+            if(exist) exist.qty++; else cart.push({ name, price, qty: 1 });
+            renderPOSCart();
+        }
+
+        function changePOSQty(name, delta) {
+            const item = cart.find(x => x.name === name);
+            if(item) {
+                item.qty += delta;
+                if(item.qty <= 0) cart = cart.filter(x => x.name !== name);
+            }
+            renderPOSCart();
+        }
+        
+        function updatePOSQtyDirectly(name, value) {
+            let newQty = parseInt(value);
+            if (isNaN(newQty) || newQty < 1) newQty = 1;
+            const item = cart.find(i => i.name === name);
+            if (item) { item.qty = newQty; renderPOSCart(); }
+        }
+
+        function renderPOSCart() {
+            const wrapper = document.getElementById('pos-cart-wrapper');
+            wrapper.innerHTML = "";
+            let total = 0;
+            
+            if(cart.length === 0) {
+                wrapper.innerHTML = '<p class="text-muted small text-center my-4">Belum ada item di kasir</p>';
+                document.getElementById('pos-cart-total').innerText = "Rp 0";
+                return;
+            }
+
+            cart.forEach(c => {
+                total += (c.price * c.qty);
+                const d = document.createElement('div');
+                d.className = "p-2 border rounded-3 text-dark bg-white d-flex justify-content-between align-items-center shadow-xs";
+                d.innerHTML = `
+                    <div>
+                        <span class="fw-bold small d-block">${c.name}</span>
+                        <small class="text-muted">${formatRupiah(c.price * c.qty)}</small>
+                    </div>
+                    <div class="d-flex align-items-center gap-1 bg-light px-1 py-0.5 rounded-pill border">
+                        <button class="btn btn-link btn-sm p-0 px-1 text-decoration-none text-dark fw-bold" onclick="changePOSQty('${c.name.replace(/'/g, "\\'")}', -1)">-</button>
+                        <input type="number" class="form-control form-control-sm text-center p-0 border-0 bg-transparent fw-bold" style="width: 25px; font-size:11px;" value="${c.qty}" onchange="updatePOSQtyDirectly('${c.name.replace(/'/g, "\\'")}', this.value)">
+                        <button class="btn btn-link btn-sm p-0 px-1 text-decoration-none text-dark fw-bold" onclick="changePOSQty('${c.name.replace(/'/g, "\\'")}', 1)">+</button>
+                    </div>`;
+                wrapper.appendChild(d);
+            });
+            document.getElementById('pos-cart-total').innerText = formatRupiah(total);
+        }
+
+        function checkoutTransaksi() {
+            if(cart.length === 0) { alert('Sesi kasir kosong!'); return; }
+            const total = cart.reduce((sum, x) => sum + (x.price * x.qty), 0);
+            const trxId = 'TRX-' + Math.floor(100000 + Math.random() * 900000);
+            const skg = new Date();
+            const stampString = skg.toLocaleString('id-ID');
+
+            const newTrx = { id: trxId, timestamp: stampString, rawDate: skg.toISOString().split('T')[0], items: cart, total: total };
+            transactions.push(newTrx);
+            safeSetItem('nyambakeryy_trans', transactions);
+
+            const printArea = document.getElementById('notaPrintArea');
+            printArea.innerHTML = `
+                <div style="text-align:center; margin-bottom:10px;">
+                    <strong>NYAMBAKERYY COFFEE & BAKERY</strong><br>
+                    ${branches[selectedBranchIdx].name}<br>
+                    ${branches[selectedBranchIdx].alamat}<br>
+                    ---------------------------------------
+                </div>
+                ID TRX : ${trxId}<br>
+                WAKTU  : ${stampString}<br>
+                KASIR  : ${currentUser.username}<br>
+                ---------------------------------------<br>
+                ${cart.map(c => `${c.name}<br>  ${c.qty}x ${formatRupiah(c.price)} = ${formatRupiah(c.price*c.qty)}`).join('<br>')}
+                <br>---------------------------------------<br>
+                <strong>TOTAL BAYAR : ${formatRupiah(total)}</strong><br><br>
+                <div style="text-align:center;">Terima kasih atas kunjungan Anda!</div>
+            `;
+            
+            cart = [];
+            renderPOSCart();
+            renderLaporan();
+            toast('Transaksi berhasil dicatat!', 'success');
+            window.print();
+        }
+branches = JSON.parse(localStorage.getItem('nyambakeryy_branches')) || branches;
+
+function renderDataCabang() {
+    const tbody = document.getElementById('tabel-cabang-body');
+    tbody.innerHTML = "";
+    branches.forEach((b, idx) => {
+        tbody.innerHTML += `<tr>
+            <td><strong>${b.name}</strong></td>
+            <td>${b.alamat}</td>
+            <td>${b.wa}</td>
+            <td>${b.jam}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-danger" onclick="hapusCabang(${idx})"><i class="fa-solid fa-trash"></i></button>
+            </td>
+        </tr>`;
+    });
+}
+// Fungsi untuk menyimpan cabang baru
+function simpanCabang() {
+    const nama = document.getElementById('namaCabang').value.trim();
+    const alamat = document.getElementById('alamatCabang').value.trim();
+
+    if (!nama || !alamat) {
+        alert("Mohon isi Nama dan Alamat!");
+        return;
+    }
+
+    // Masukkan ke array
+    branches.push({
+    name: nama,
+    alamat: alamat,
+    wa: "",
+    jam: "",
+    maps: ""
+});
+    // Simpan ke Local Storage agar tidak hilang saat refresh
+    safeSetItem('nyambakeryy_branches', branches);
+    
+    // Sembunyikan modal dan segarkan tabel
+    bootstrap.Modal.getInstance(document.getElementById('branchFormModal')).hide();
+    renderTabelCabang(); 
+    alert("Data berhasil disimpan!");
+}
+
+
+function hapusCabang(idx) {
+    branches.splice(idx, 1);
+    safeSetItem('nyambakeryy_branches', branches);
+    renderDataCabang();
+}
+
+        // ================= LAPORAN PENJUALAN INSIGHT =================
+        function renderLaporan() {
+            const tbody = document.getElementById('tabel-laporan-body');
+            tbody.innerHTML = "";
+            
+            const startTgl = document.getElementById('filterStartTanggal').value;
+            const endTgl = document.getElementById('filterEndTanggal').value;
+
+            let filterTrx = transactions;
+            if(startTgl && endTgl) {
+                filterTrx = transactions.filter(t => (t.rawDate >= startTgl && t.rawDate <= endTgl) || t.timestamp.includes(startTgl));
+            }
+
+            let omset = 0;
+            filterTrx.forEach(t => {
+                omset += t.total;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><code>${t.id}</code></td>
+                    <td>${t.timestamp}</td>
+                    <td><div class="text-wrap small text-secondary">${t.items.map(i=>`${i.name} (${i.qty})`).join(', ')}</div></td>
+                    <td class="text-end fw-bold text-success">${formatRupiah(t.total)}</td>`;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('lap-total-pendapatan').innerText = formatRupiah(omset);
+            document.getElementById('lap-total-transaksi').innerText = filterTrx.length;
+        }
+
+        // ================= KELOLA AKUN MANAJEMEN =================
+        function renderDataPengguna() {
+            const tbody = document.getElementById('tabel-pengguna-body');
+            tbody.innerHTML = "";
+            users.forEach((u, idx) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${u.username}</strong></td>
+                    <td><span class="badge bg-purple-subtle text-dark border">${u.role}</span></td>
+                    <td><code>•••••••</code></td>
+                    <td>${u.whatsapp || '-'}</td>
+                    <td><span class="badge bg-success-subtle text-success">${u.status}</span></td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary py-0.5 px-2" onclick="openEditUserModal(${idx})"><i class="fa-solid fa-user-gear"></i></button>
+                        <button class="btn btn-sm btn-outline-danger py-0.5 px-2" onclick="hapusUser(${idx})"><i class="fa-solid fa-user-xmark"></i></button>
+                    </td>`;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openAddUserModal() {
+            document.getElementById('formUserIdx').value = "";
+            document.getElementById('formUserUsername').value = "";
+            document.getElementById('formUserRole').value = "staff";
+            document.getElementById('formUserPassword').value = "";
+            document.getElementById('formUserWA').value = "";
+            userFormModalObj.show();
+        }
+
+        function openEditUserModal(idx) {
+            const u = users[idx];
+            document.getElementById('formUserIdx').value = idx;
+            document.getElementById('formUserUsername').value = u.username;
+            document.getElementById('formUserRole').value = u.role;
+            document.getElementById('formUserPassword').value = u.password;
+            document.getElementById('formUserWA').value = u.whatsapp || "";
+            userFormModalObj.show();
+        }
+
+        function saveUser() {
+            const idxVal = document.getElementById('formUserIdx').value;
+            const idx = idxVal !== "" ? parseInt(idxVal) : "";
+            const username = document.getElementById('formUserUsername').value.trim();
+            const role = document.getElementById('formUserRole').value;
+            const password = document.getElementById('formUserPassword').value.trim();
+            const whatsapp = document.getElementById('formUserWA').value.trim();
+
+            if(!username || !password) { alert('Lengkapi username dan sandi akun!'); return; }
+
+            const data = { username, role, password, whatsapp, status: "aktif" };
+            if(idx === "") users.push(data); else users[idx] = data;
+            
+            safeSetItem('nyambakeryy_user', users);
+            userFormModalObj.hide();
+            loadAll();
+            toast('Data pengguna internal aman disimpan!', 'success');
+        }
+
+        function hapusUser(idx) {
+            if(confirm('Batalkan hak otoritas & hapus akun ini?')) {
+                users.splice(idx, 1);
+                safeSetItem('nyambakeryy_user', users);
+                loadAll();
+            }
+        }
+
+       // Tambahkan fungsi ini di bawah skrip yang sudah ada
+function openAddBranchModal() {
+    const modalElement = document.getElementById('branchFormModal');
+    // Memastikan modal Bootstrap benar-benar ada sebelum dibuka
+    if (modalElement) {
+        const branchModal = new bootstrap.Modal(modalElement);
+        branchModal.show();
+    } else {
+        console.error("Modal branchFormModal tidak ditemukan di HTML!");
+    }
+}
+    </script>
+    <div class="modal fade" id="branchFormModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4">
+            <div class="modal-header border-bottom px-4">
+                <h5 class="modal-title fw-bold">Tambah Data Cabang</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4 small">
+                <input type="text" id="namaCabang" class="form-control mb-2" placeholder="Nama Cabang">
+                <input type="text" id="alamatCabang" class="form-control mb-2" placeholder="Alamat">
+            </div>
+            <div class="modal-footer px-4">
+                <button class="btn btn-sm btn-light border rounded-pill px-3" data-bs-dismiss="modal">Tutup</button>
+                <button class="btn btn-sm nyam-btn rounded-pill px-4">Simpan Cabang</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
